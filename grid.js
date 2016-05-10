@@ -20,53 +20,75 @@ var lodpara = {
               color: '#94E452'
             })
           }),
+	waterstyle: new ol.style.Style({
+            fill: new ol.style.Fill({
+              color: '#2196F3'
+            })
+        }),
 	tolratio: 3.00,
 
 	/* 10m 分辨率以下就不做简化。。数据量大，简化算法太费时 */
-	noSimpleRes: 10
+	noSimpleRes: 10,
+	layername:''
 
 }
 
-map.getView().on('change:resolution',function(evt){
-	console.log(evt);
-	var resolution = map.getView().getResolution();
-	var tolerance = resolution*3.00;
-	console.log('resolution change: ' + resolution);
-	getlayername('110m_land.shp')?getlayername('110m_land.shp').setMinResolution(6000):console.log('');
-	try{
-		var layer = getlayername('Green.shp')?getlayername('Green.shp'):null;
-		if (!layer){return;}
-		layer.setStyle(lodpara.greenstyle);
-		// 最大可见分辨率，320m，小于20m则不开简化。
-		layer.setMaxResolution(320);
-		if (resolution > 320){return;}
-		else if (resolution <10) {
+function lod(layername){
+		// console.log(evt);
+		var resolution = map.getView().getResolution();
+		var tolerance = resolution*3.00;
+		console.log('resolution change: ' + resolution);
+		getlayername('water.shp').setStyle(lodpara.waterstyle);
+		getlayername('Green.shp').setStyle(lodpara.greenstyle);
+		getlayername('110m_land.shp')?getlayername('110m_land.shp').setMinResolution(6000):console.log('');
+		try{
+			var layer = getlayername(lodpara.layername)?getlayername(lodpara.layername):null;
+			if (!layer){return;}
+			// 最大可见分辨率，320m，小于20m则不开简化。
+			layer.setMaxResolution(320);
+			if (resolution > 320 || layer.get('visible') == false){return;}
+			else if (resolution <10) {
+				layer.getSource().clear();
+				layer.getSource().addFeatures(lodpara.fs);
+				return;
+			}
+			// 如果已经深度拷贝原始要素信息，则每次都从原始要素计算简化。
+			lodpara.fs = lodpara.fs?lodpara.fs:layer.getSource().getFeatures().concat();
+
+			var simfeature = null;
+			var simfeatures = [];
+			var stime = new Date().getTime();
+			for (var i = 0; i < lodpara.fs.length; i++) {
+				// featureobj 2 jsonstr
+				/*if (i>500){break;}*/
+				var geojsonstr = lodpara.formater.writeFeature(lodpara.fs[i]);
+
+				/* input JSONobject */
+				simfeature = turf.simplify(JSON.parse(geojsonstr), tolerance, false);
+				simfeatures.push(lodpara.formater.readFeature(JSON.stringify(simfeature)));
+			}
 			layer.getSource().clear();
-			layer.getSource().addFeatures(lodpara.fs);
-			return;
+			var etime = new Date().getTime();
+			console.log('simplify tolerance '+ tolerance +' finished, clear old feauture. elapsed: '+ (etime-stime)+ 'ms');
+			layer.getSource().addFeatures(simfeatures);		
 		}
-		// 如果已经深度拷贝原始要素信息，则每次都从原始要素计算简化。
-		lodpara.fs = lodpara.fs?lodpara.fs:layer.getSource().getFeatures().concat();
-
-		var simfeature = null;
-		var simfeatures = [];
-		var stime = new Date().getTime();
-		for (var i = 0; i < lodpara.fs.length; i++) {
-			// featureobj 2 jsonstr
-			/*if (i>500){break;}*/
-			var geojsonstr = lodpara.formater.writeFeature(lodpara.fs[i]);
-
-			/* input JSONobject */
-			simfeature = turf.simplify(JSON.parse(geojsonstr), tolerance, false);
-			simfeatures.push(lodpara.formater.readFeature(JSON.stringify(simfeature)));
+		catch(e){
+			console.log(e);
 		}
-		layer.getSource().clear();
-		var etime = new Date().getTime();
-		console.log('simplify tolerance '+ tolerance +' finished, clear old feauture. elapsed: '+ (etime-stime)+ 'ms');
-		layer.getSource().addFeatures(simfeatures);		
 	}
-	catch(e){
-		console.log(e);
-	}
-})
+
+simplify('Green.shp');
+
+function simplify(layername){
+	lodpara.layername = layername;
+	map.getView().on('change:resolution',lod);
+}
+
+function unsim(layername){
+	lodpara.layername = layername;
+	map.getView().un('change:resolution',lod);
+	
+}
+
+
 

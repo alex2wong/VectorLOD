@@ -27,6 +27,8 @@ var styleFunction = function(feature, resolution) {
   return style;
 }
 
+// var roadstyle = 
+
 var vector = new ol.layer.Vector({
   source: new ol.source.Vector({  
     url: 'examples/data/kml/2012_Earthquakes_Mag5.kml',
@@ -48,8 +50,18 @@ var shroad = new ol.layer.Vector({
     format: new ol.format.EsriJSON({
     })
   }),
-  visible:false,
-  title:"shanghai_road"
+  visible: false,
+  title: "shanghai_road",
+  style: new ol.style.Style({
+    fill: new ol.style.Fill(
+    {
+      color: '#aa10'
+    }),
+    stroke : new ol.style.Stroke({
+      color: '#fff',
+      width: 2
+    })
+  })
 });
 //$.ajax({"url":"12.ashx","success":function(data){ ol.Geometry();ol.Feature(ol.Geometry);ol.source.addFeature(*) }})
 
