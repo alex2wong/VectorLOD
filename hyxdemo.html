@@ -202,6 +202,7 @@
         return layers[i];
       }
     }
+    return null;
   }
 
   function getlayer(index){
@@ -434,7 +435,7 @@
         loadshp('Green.shp');
         loadshp('water.shp');
 
-        $('#map')[0].style.backgroundColor = 'rgba(0,153,212,0.8)';
+        $('#map')[0].style.backgroundColor = 'rgba(244,244,244,0.95)';
         getlayername('Green.shp')?getlayername('Green.shp').setStyle(greenstyle):console.log('loading shp....'); 
         getlayername('Green.shp')?getlayername('Green.shp').setMaxResolution(40):console.log('loading shp....'); 
         /* getlayername('water.shp').setZIndex(15);*/
@@ -566,11 +567,17 @@
       
     }
 
-    function zoomToLayer(layerindex){
+
+    /* input layername */
+    function zoomToLayer(targetlayer){
       if (arguments[0] == undefined){
-        layerindex = map.getLayers().array_.length-1;
+        var layerindex = map.getLayers().array_.length-1;
+        targetlayer = map.getLayers().array_[layerindex];
       }
-      var targetlayer = map.getLayers().array_[layerindex];
+      else{
+        targetlayer = getlayername(targetlayer);
+      }
+
       console.log('new added layer has feature num: '+ targetlayer.getSource().getFeatures().length);
       var extent = targetlayer.getSource().getExtent();
       try {
@@ -581,7 +588,7 @@
       } catch(e) {
         // statements
         console.log("This layer is not visible or has no feature");
-      }      
+      }
     }
 
     var shpfiles = document.getElementById("shpfile");
@@ -606,11 +613,15 @@
            var jsonR = new ol.format.GeoJSON();
            var fs = jsonR.readFeatures(reader.result);
            for (i in fs){
+              if (fs[i].getGeometry().extent_[0] > 180 || fs[i].getGeometry().extent_[0] < -180){
+                nfeatures.push(fs[i]);
+                continue;
+              }
               fs[i].getGeometry().transform("EPSG:4326","EPSG:3857");
               //newlayer.getSource().addFeature(fs[i]);
               nfeatures.push(fs[i]);
            }
-        }        
+        }
         //zoomToLayer(layersnum-1);
       }
       if(isBinary){
@@ -673,7 +684,7 @@
     });
     map.addOverlay(marker);
     // earthquick 2 top
-    getlayer(0).setZIndex(10)
+    getlayer(0).setZIndex(10);
     
 </script>
 <script src="interactions.js"></script>

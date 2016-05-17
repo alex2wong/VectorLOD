@@ -58,8 +58,8 @@ var shroad = new ol.layer.Vector({
       color: '#aa10'
     }),
     stroke : new ol.style.Stroke({
-      color: '#fff',
-      width: 2
+      color: 'rgba(218,185,249,0.70)',
+      width: 3
     })
   })
 });

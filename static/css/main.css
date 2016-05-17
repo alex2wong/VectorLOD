@@ -1,0 +1,115 @@
+html{
+            padding: 0;
+            margin: 0;
+            background-color: #4D0F0F; 
+            color:#03A9F4;
+        }
+        .pclass{
+            line-height:1.2em;
+        }
+
+        #login{
+            position: absolute;
+            right:50px;
+            top:5px;          
+
+        }
+
+        #login:hover{
+            color: #03A9F4;
+            cursor: pointer;
+        }
+
+        #canv{
+            width: 600px;
+            height: 300px;
+            border:1px solid lightblue;
+        }
+        ul{
+            list-style: none;
+            margin-left:-40px;
+        }
+
+        .btn{
+            width:100px;
+            height:;
+            color: #03A9F4;
+            font-family: "MicroSoft Yahei";
+            border-radius: 2px 2px;
+            border:1px solid lightblue;
+            text-decoration: none;
+            float:left;
+        }
+        .btn :hover{
+            color: #fff;
+            background-color: #03A9F4;           
+        }
+        .text{
+            padding-left: 20px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            display: block;
+            cursor:pointer;
+        }
+        #data_file{
+            width:250px;
+            height:100px;
+            text-align: "center";
+            font-family: "MicroSoft Yahei";
+            border-radius: 2px 2px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border: 1px dashed lightblue;
+        }
+        #attachinfo{
+            height:30px;
+            width:150px;
+            text-align: "center";  
+            font-size: 1em;          
+            border-radius: 2px 2px;
+        }
+
+       .btn_submit{
+            width:90px;
+            height:35px;            
+            font-size: 1em;
+            font-family: "MicroSoft Yahei";
+            border-radius: 4px 4px;
+            background-color: rgba(255,255,255,0.2);
+       }
+
+       .btn_submit:hover{
+            background-color: #03A9F4;
+            color:white;
+            cursor: default;
+       }
+
+       #logDiv{
+            width:300px;
+            height:200px;
+            position:absolute;
+            left:50%;
+            margin-left: -150px;
+            top:50%;
+            margin-top: -100px;
+            display: none;
+            background-color: lightblue;
+            font-family: "MicroSoft Yahei";
+            border-radius: 3px 3px;
+
+            
+       }
+
+       .form-btn{
+            height:30px;
+            width:200px;
+            border-radius: 3px 3px;
+            margin-top: 5px;
+            margin-left:50px;
+            font-size: 1.1em;
+
+       }
+
+       .align-cent{
+            text-align:center;
+       }
