@@ -49,17 +49,23 @@ def cache_app(environ, res):
     #     except Exception, e:
     #         print 'value cant transform to str'
     request_bodysize = int(environ.get('CONTENT_LENGTH',0))
-    print 'received post data, length: ' + str(request_bodysize)
+    print ('received post data, length:' + str(request_bodysize))
     if request_bodysize > 0:
+        # maybe it's different in Python 3.x, body is not received ??
         body = environ['wsgi.input'].read(request_bodysize)
         d = parse_qs(body)
+        print (type(body)) # <class bytes> d is dict type
+        for k in d:
+            print (d[k])
+            # print (str(k) + d[k])
+        print (type(d.get('content'))) # <class dict>
         cachefile = open('cache.json','w')
-        jsonstr = d.get('content')[0]
-        print type(jsonstr)
-        cachefile.write(jsonstr)
+        jsonstr = d[b'content'][0]
+        # print (type(jsonstr))
+        cachefile.write("jsonstr")
         cachefile.close()
     else:
-        print 'No Post Body found!!!'
+        print ('No Post Body found!!!')
 
     res("200 OK", [("Content-Type", "text/json")])
     return "{'mes':'Dont know Where is the Body'}"
@@ -78,16 +84,16 @@ def static_app(environ, res):
     filepath = environ['PATH_INFO'].replace(STATIC_URL_PRE,STATIC_FILE_DIR)
     if filepath.startswith('/'):
         filepath = filepath[1:]
-    print 'request filepath is:%s'%(filepath)
+    print ('request filepath is:%s'%(filepath))
     ext = filepath.split('.')
     for n in ext:
         mime = n
-    print 'mime is:%s'%(mime)
+    print ('mime is:%s'%(mime))
     try:
         if os.path.exists(filepath) == True:
             res("200 OK", [("Content-Type", content_type(filepath))])
             h = open(filepath, "rb")
-            print "open file %s finished"%(filepath)
+            print ("open file %s finished"%(filepath))
             content = h.read()
             return [content]
         else:
@@ -95,8 +101,8 @@ def static_app(environ, res):
             return "<h1>Sorry, %s!</h1>"%('Not found')
         # elif mime == 'shp'
         #  return "<h1>Hello, %s!</h1>" %(environ or 'web')
-    except Exception,e:
-        print 'err'
+    except Exception(e):
+        print ('err')
 
 
 def show_404(environ, res):
