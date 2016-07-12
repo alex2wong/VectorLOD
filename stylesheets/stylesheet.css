@@ -148,6 +148,77 @@ img {
   -ms-box-shadow: 0 0 5px #ebebeb;
 }
 
+img.img-avatar {
+  width: 150px;
+  border-radius: 15px;
+}
+
+/* pinterest begin */
+#columns {
+  column-width: 250px;
+  column-gap: 15px;
+  width: 90%;
+  max-width: 1100px;
+  margin: 50px auto;
+}
+
+div#columns figure {
+  background: #fefefe;
+  border: 2px solid #fcfcfc;
+  box-shadow: 0 1px 2px rgba(34, 25, 25, 0.4);
+  margin: 0 2px 15px;
+  opacity: 0.8;
+  padding: 15px; padding-bottom: 10px;
+  transition: opacity .4s ease-in-out;
+  column-break-inside: avoid;
+  display: inline-block;
+}
+
+div#columns figure img {
+  width: 100%; height: auto;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 5px;
+  margin-bottom: 5px;
+}
+
+div#columns figure:hover{
+  opacity: 1;
+  transition: padding .4s ease-in-out;
+}
+
+figcaption {
+  font-family: 'Microsoft Yahei';
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+}
+/* pinterest end */
+
+
+
+/* Map style begin */
+#mapcontainer {
+  position: absolute;
+  height: 209px;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 5;
+}
+
+header{
+  z-index: 10;
+}
+
+.night_layer {
+
+}
+
+
+
+/* Map Style end */
+
+
 p img {
   display: inline;
   margin: 0;
@@ -293,7 +364,9 @@ Full-Width Styles
   background: -ms-linear-gradient(top, #373737, #212121);
   background: -o-linear-gradient(top, #373737, #212121);
   background: linear-gradient(top, #373737, #212121);
-}
+/*   background-image: url(/images/bg.png);
+ */
+ }
 
 #header_wrap .inner {
   padding: 50px 10px 30px 10px;

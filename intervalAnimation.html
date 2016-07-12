@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>tianditu example</title>
+
+    <link href="ol.css" rel="stylesheet" />
+    <script src="ol.js"></script>
+    <style>
+        #map {
+            width: 100%;
+            height: 300px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="map"></div>
+    <input id='duration' type="text" value="5">动画时长（秒）
+    <button id="start-animation">开始动画</button>
+
+    <script>
+
+        var points = [],line = new ol.geom.LineString(),layer = null,source = new ol.source.Vector(),duration = 5000;
+        var speed,animating = false,animateind = 0,winterval;
+
+        var tian_base = new ol.layer.Tile({
+            source: new ol.source.XYZ({
+                url: "http://t{1-7}.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}"
+            })
+        });
+
+
+        var tian_diming = new ol.layer.Tile({
+            source: new ol.source.XYZ({
+                url: "http://t{1-7}.tianditu.com/DataServer?T=cva_w&x={x}&y={y}&l={z}"
+            })
+        });
+
+
+        var map = new ol.Map({
+            layers: [
+             tian_base,
+             tian_diming,
+            ],
+            controls: ol.control.defaults({
+
+            }).extend([
+                new ol.control.MousePosition(),
+                new ol.control.ZoomSlider()
+            ]),
+            target: 'map',
+            view: new ol.View({
+                center: ol.proj.transform([121.55, 30.9], 'EPSG:4326', 'EPSG:3857'),
+                zoom: 12
+            })
+        });
+
+        // 整个图层的style..如果想根据feature 返回样式，可以用函数fun(feature,resolution)返回
+        var style = new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 10,
+                fill: new ol.style.Fill({
+                  color: 'rgba(255, 0, 0, 0.9)'
+                  //color: 'rgba(255, 153, 0, 0.4)'
+                }),
+                stroke: new ol.style.Stroke({
+                  color: 'rgba(255, 204, 0, 0.2)',
+                  width: 0
+                })
+              }),
+            stroke: new ol.style.Stroke({
+                  color: 'rgba(255, 104, 0, 0.7)',
+                  width: 10
+                })
+        });
+
+        // 矢量图层
+        layer = new ol.layer.Vector({
+            source: source,
+            style: style
+        });
+
+        // coordinates..
+        points = [[13528308.469393397,3621436.247365244],[13528499.746025624,3621453.7599604684],[13528891.385496132,3621472.7721412512],[13529116.04313299,3621472.100175343],[13529789.751969017,3621456.702023817],[13530325.377603969,3621448.538069152],[13530860.964184335,3621427.0088375076],[13531324.169069227,3621436.847173458],[13531460.93817463,3621433.1843864187],[13532586.0398153,3621410.0345997005],[13532738.728690155,3621407.3572019795],[13532837.198572122,3621406.5373242777],[13533019.349696323,3621406.927368078],[13533263.584782815,3621413.897700062],[13533459.438346824,3621422.2857037694],[13533831.36118742,3621447.1230654367],[13534296.26149908,3621475.27092919],[13534615.999277575,3621494.3112556757],[13534807.58005939,3621498.141079436],[13534998.639680449,3621494.700509309],[13535117.85883522,3621487.9818491708],[13535246.153249633,3621478.604449321],[13535255.303062413,3621477.9360152096],[13535464.636798315,3621457.224270859],[13535630.155553706,3621432.911802099],[13535687.118170055,3621424.548191508],[13535883.936131923,3621388.5721480045],[13536050.576709483,3621352.605867899],[13536247.477511602,3621299.3438631594],[13536512.77770902,3621213.9467846123],[13536584.15236509,3621189.56256584],[13536753.04638929,3621125.7190616247],[13536897.728918996,3621069.851705571]];
+        line.setCoordinates(points);
+
+        var f = new ol.Feature(line);
+        //source.addFeature(f);
+        map.addLayer(layer);
+
+        function renderp(){
+            if (animateind > points.length-1){
+                animateind = 0;
+                clearInterval(winterval);
+                return;
+            }
+            console.log('rendering point'+ animateind);
+            var point = new ol.geom.Point(points[animateind]);
+            var pf = new ol.Feature(point);
+            source.addFeature(pf);
+            animateind++;
+        }
+
+
+        // 动画要求是输入一些点坐标对，points，按照顺序绘制。
+        // setTimeout(function(){console.log(11)},2000)
+        // setInterval(function(){console.log(11)},1000)
+        function startAnimation(){
+            duration = 1000*parseInt(document.getElementById('duration').value);
+            source.clear();
+            source.addFeature(f);
+            var point,pf,interv,plength = points.length;
+            interv = duration/plength;
+            winterval = setInterval(renderp,interv);
+        }
+
+        
+        
+        var startButton = document.getElementById('start-animation');
+        startButton.addEventListener('click', startAnimation, false);
+
+    </script>
+</body>
+</html>
