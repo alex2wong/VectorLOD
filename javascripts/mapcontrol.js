@@ -63,7 +63,8 @@ var map = new ol.Map({
         maxZoom: 5*/
         proj: new ol.proj.Projection(3857),
         center: ol.proj.transform([121.500, 76.267], 'EPSG:4326', 'EPSG:3857'),
-        zoom: 17
+        zoom: 17,
+        maxZoom: 18
     })
 });
 
