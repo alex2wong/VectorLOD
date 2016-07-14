@@ -103,8 +103,10 @@ footer p {
 
 a {
   text-decoration: none;
-  color: #007edf;
+  /* color: #007edf; */
+  color: #fff;
   text-shadow: none;
+  cursor: pointer;
 
   transition: color 0.5s ease;
   transition: text-shadow 0.5s ease;
@@ -118,7 +120,7 @@ a {
   -ms-transition: text-shadow 0.5s ease;
 }
 
-a:hover, a:focus {text-decoration: underline;}
+a:hover, a:focus {text-decoration: nonde;}
 
 footer a {
   color: #F2F2F2;
@@ -210,10 +212,14 @@ header{
   z-index: 10;
 }
 
-.night_layer {
-
+.btn {
+  width: 100px;
+  height: 100px;
+  padding-right: 30px;
+  color: #fff;
+  text-decoration: none;
+  list-style: none;
 }
-
 
 
 /* Map Style end */
